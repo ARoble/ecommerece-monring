@@ -5,7 +5,7 @@ exports.products = async (req, res) => {
     const products = await Product.find({});
     res.status(200).json({
       message: "All products",
-      data: products,
+      products: products,
     });
   } catch (e) {
     res.status(400).json({

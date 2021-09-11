@@ -1,6 +1,16 @@
-import { MdAddShoppingCart, MdCopyright } from "react-icons/md";
+import ProductCard from "./ProductCard";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 function Home() {
+  const [products, setProduct] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:8000/api/product/")
+      .then((res) => setProduct(res.data.products));
+  });
+
   return (
     <>
       <div className="flex main-banner">
@@ -33,73 +43,12 @@ function Home() {
             <span>See all</span>
           </div>
           <div className="deals flex">
-            <div className="product-card">
-              <div className="product-image">
-                <img src="./iphone.png" alt="product" />
-              </div>
-              <div className="product-details flex">
-                <div>
-                  <h3>Iphone X Pro</h3>
-                  <span>$890</span>
-                </div>
-                <MdAddShoppingCart className="cart-hover" size={"33px"} />
-              </div>
-            </div>
-            <div className="product-card">
-              <div className="product-image">
-                <img src="./iphone.png" alt="product" />
-              </div>
-              <div className="product-details flex">
-                <div>
-                  <h3>Iphone X Pro</h3>
-                  <span>$890</span>
-                </div>
-                <MdAddShoppingCart className="cart-hover" size={"33px"} />
-              </div>
-            </div>
-            <div className="product-card">
-              <div className="product-image">
-                <img src="./iphone.png" alt="product" />
-              </div>
-              <div className="product-details flex">
-                <div>
-                  <h3>Iphone X Pro</h3>
-                  <span>$890</span>
-                </div>
-                <MdAddShoppingCart className="cart-hover" size={"33px"} />
-              </div>
-            </div>
-            <div className="product-card">
-              <div className="product-image">
-                <img src="./iphone.png" alt="product" />
-              </div>
-              <div className="product-details flex">
-                <div>
-                  <h3>Iphone X Pro</h3>
-                  <span>$890</span>
-                </div>
-                <MdAddShoppingCart className="cart-hover" size={"33px"} />
-              </div>
-            </div>
+            {products.map((item) => (
+              <ProductCard product={item} />
+            ))}
           </div>
         </div>
       </div>
-      {/* <div className="product-list ">
-        <div>
-          <h2>Deals of the day</h2>
-          <h2>See all</h2>
-        </div>
-        <div className="container flex">
-          <div className="product-card">
-            <div className="product-image">
-              <img src="./product-1.jpg" alt="product" />
-            </div>
-            <h3>Iphone X Pro</h3>
-            <span>$890</span>
-            <MdAddShoppingCart />
-          </div>
-        </div>
-      </div> */}
     </>
   );
 }
