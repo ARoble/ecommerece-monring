@@ -9,17 +9,38 @@ import {
   useParams,
 } from "react-router-dom";
 import Review from "./Review";
+import ReviewForm from "./ReviewForm";
 
 function Product() {
   const { id } = useParams();
   const [product, setProduct] = useState([]);
-  const [stars, setStars] = useState(1);
+  const [review, setReview] = useState([]);
+  const [qty, setQty] = useState(0);
   useEffect(() => {
     //code
     axios
       .get(`http://localhost:8000/api/product/${id}`)
       .then((res) => setProduct(res.data.data));
+
+    axios
+      .get(`http://localhost:8000/api/review/${id}`)
+      .then((res) => setReview(res.data.reviews));
   });
+
+  function addCart(product) {
+    //code
+    const cart = localStorage.getItem("cart");
+    if (cart === null) {
+      product.quantity = qty;
+      let item = [product];
+      localStorage.setItem("cart", JSON.stringify(item));
+    } else {
+      let prevItem = JSON.parse(localStorage.getItem("cart"));
+      product.quantity = qty;
+      let items = [...prevItem, product];
+      localStorage.setItem("cart", JSON.stringify(items));
+    }
+  }
 
   return (
     <div className="container ">
@@ -33,12 +54,28 @@ function Product() {
             <b>${product.price}</b>
           </span>
           <div>
-            <button className="btn-qty">-</button>0
-            <button className="btn-qty">+</button>
+            <button
+              className="btn-qty"
+              onClick={() => qty > 0 && setQty(qty - 1)}
+            >
+              -
+            </button>
+            {qty}
+            <button
+              className="btn-qty"
+              onClick={() => qty < product.quantity && setQty(qty + 1)}
+            >
+              +
+            </button>
           </div>
-          <button className="btn-addCart hover">
-            <MdShoppingBasket />
-          </button>
+          {qty > 0 && (
+            <button
+              className="btn-addCart hover"
+              onClick={() => addCart(product)}
+            >
+              <MdShoppingBasket />
+            </button>
+          )}
           <p>{product.description}</p>
         </div>
       </div>
@@ -46,33 +83,11 @@ function Product() {
       <div className="flex">
         <div className="review-list">
           <h3>Latest Reviews</h3>
-          <Review />
+          {review.map((review) => (
+            <Review review={review} />
+          ))}
         </div>
-
-        <div className="review-form">
-          <h3>Add a new review</h3>
-          <div className="flex add-review">
-            <input type="text" Placeholder="Review Title" className="input" />
-            <div>
-              <MdStar
-                className={stars >= 1 ? "review-star star" : "review-star"}
-                onClick={() => setStars(1)}
-              />
-              <MdStar
-                className={stars >= 2 ? "review-star star" : "review-star"}
-                onClick={() => setStars(2)}
-              />
-              <MdStar
-                className={stars >= 3 ? "review-star star" : "review-star"}
-                onClick={() => setStars(3)}
-              />
-              <MdStar className="review-star " />
-              <MdStar className="review-star " />
-            </div>
-            <textarea placeholder="Review" rows="4" />
-            <button className="btn-review hover">Submit Review</button>
-          </div>
-        </div>
+        <ReviewForm />
       </div>
     </div>
   );

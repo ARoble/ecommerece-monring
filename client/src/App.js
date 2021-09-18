@@ -24,7 +24,7 @@ function App() {
           <Route path="/order/list" component={OrderList} />
           <Route path="/product/:id" component={Product} />
         </Switch>
-        <Footer />
+        {/* <Footer /> */}
       </Router>
     </>
   );
