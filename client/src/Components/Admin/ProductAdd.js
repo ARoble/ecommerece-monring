@@ -8,11 +8,12 @@ function ProductAdd() {
     category: "",
     quantity: 0,
     description: "",
-    image: "image",
+    image: "",
   });
 
   function save(e) {
     e.preventDefault();
+
     axios
       .post("http://localhost:8000/api/product/", product)
       .then((res) => console.log(res));
@@ -22,7 +23,7 @@ function ProductAdd() {
     <div className="container flex">
       <AdminNav />
       <div className="admin-section">
-        <form className="product-form">
+        <form className="product-form" enctype="multipart/form-data">
           <h2 className="admin-heading">Add Product</h2>
           <input
             type="text"
@@ -62,7 +63,14 @@ function ProductAdd() {
               setProduct({ ...product, description: e.target.value })
             }
           ></textarea>
-          <input type="file" placeholder="Image " />
+          <input
+            type="file"
+            name="image"
+            onChange={(e) => {
+              setProduct({ ...product, image: e.target.value });
+            }}
+            // onChange={(e) => console.log(e.target.files[0])}
+          />
           <button className="btn-review hover" onClick={(e) => save(e)}>
             Save Product
           </button>

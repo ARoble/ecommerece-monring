@@ -1,7 +1,15 @@
 import { useState, useEffect } from "react";
-
+import axios from "axios";
 function CheckOut() {
   const [loading, setLoading] = useState(true);
+  const [info, setInfo] = useState(false);
+  const [shipping, setShipping] = useState({
+    firstName: "",
+    secondName: "",
+    email: "",
+    shipping: "",
+    phone: "",
+  });
   const [cart, setCart] = useState();
   const [total, setTotal] = useState(0);
   useEffect(() => {
@@ -15,7 +23,11 @@ function CheckOut() {
     }
     setTotal(total);
   }, []);
-
+  function placeOrder() {
+    const data = { ...shipping, cart, total };
+    axios.post("http://localhost:8000/api/order", data);
+    localStorage.removeItem("cart");
+  }
   return <div>{loading === true ? <h1>Loading..</h1> : render()}</div>;
 
   function render() {
@@ -46,36 +58,89 @@ function CheckOut() {
             </tr>
           </table>
           <div className="flex" style={{ justifyContent: "flex-end" }}>
-            <button className="btn-checkout">Proceed to checkout</button>
+            {info ? (
+              <button
+                className="btn-checkout"
+                style={{ background: "red" }}
+                onClick={() => setInfo(false)}
+              >
+                close
+              </button>
+            ) : (
+              <button className="btn-checkout" onClick={() => setInfo(true)}>
+                Proceed to checkout
+              </button>
+            )}
           </div>
         </div>
-        <div className="flex shipping-info">
-          <div className="shipping-form">
-            <h3>Shipping information</h3>
-            <div>
-              <input type="text" placeholder="First Name" className="input" />
-            </div>
-            <div>
-              <input type="text" placeholder="Second Name" className="input" />
-            </div>
-            <div>
-              <input type="text" placeholder="Email" className="input" />
-            </div>
-            <div>
-              <input
-                type="text"
-                placeholder="Shipping Address"
-                className="input"
-              />
-            </div>
-            <div>
-              <input type="text" placeholder="Phone Number" className="input" />
-            </div>
-            <div>
-              <button className="btn-checkout" style={{ float: "right" }}>
-                Place Order
-              </button>
-            </div>
+        {info && form()}
+      </div>
+    );
+  }
+
+  function form() {
+    return (
+      <div className="flex shipping-info">
+        <div className="shipping-form">
+          <h3>Shipping information</h3>
+          <div>
+            <input
+              type="text"
+              placeholder="First Name"
+              className="input"
+              onChange={(e) =>
+                setShipping({ ...shipping, firstName: e.target.value })
+              }
+            />
+          </div>
+          <div>
+            <input
+              type="text"
+              placeholder="Second Name"
+              className="input"
+              onChange={(e) =>
+                setShipping({ ...shipping, secondName: e.target.value })
+              }
+            />
+          </div>
+          <div>
+            <input
+              type="text"
+              placeholder="Email"
+              className="input"
+              onChange={(e) =>
+                setShipping({ ...shipping, email: e.target.value })
+              }
+            />
+          </div>
+          <div>
+            <input
+              type="text"
+              placeholder="Shipping Address"
+              className="input"
+              onChange={(e) =>
+                setShipping({ ...shipping, shipping: e.target.value })
+              }
+            />
+          </div>
+          <div>
+            <input
+              type="text"
+              placeholder="Phone Number"
+              className="input"
+              onChange={(e) =>
+                setShipping({ ...shipping, phone: e.target.value })
+              }
+            />
+          </div>
+          <div>
+            <button
+              className="btn-checkout"
+              style={{ float: "right" }}
+              onClick={() => placeOrder()}
+            >
+              Place Order
+            </button>
           </div>
         </div>
       </div>
