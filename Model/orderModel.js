@@ -6,16 +6,17 @@ const orderSchema = mongoose.Schema({
   email: String,
   shipping: String,
   phone: String,
-  order: [
+  cart: [
     {
-      productName: String,
+      name: String,
       quantity: Number,
       price: Number,
       total: Number,
+      image: String,
     },
   ],
 
-  subtTotal: Number,
+  total: Number,
 });
 
 const orderModel = mongoose.model("Order", orderSchema);

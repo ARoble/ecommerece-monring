@@ -1,10 +1,19 @@
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  useHistory,
+} from "react-router-dom";
 import AdminNav from "./AdminNav";
 import { MdModeEdit, MdDelete } from "react-icons/md";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 function ProductList() {
   const [products, setProducts] = useState([]);
+  const history = useHistory();
   useEffect(() => {
     axios
       .get("http://localhost:8000/api/product/")
@@ -12,10 +21,11 @@ function ProductList() {
   });
   function deleteProduct(id) {
     //code
-    console.log(id);
-    axios
-      .delete(`http://localhost:8000/api/product/${id}`)
-      .then((res) => console.log(res));
+
+    axios.delete(`http://localhost:8000/api/product/${id}`).then((res) => {
+      toast.success("Product Deleted");
+      history.push("/product/list");
+    });
   }
   return (
     <div className="container flex">
@@ -36,7 +46,9 @@ function ProductList() {
               <td>{product.quantity}</td>
               <td>{product.price}</td>
               <td>
-                <MdModeEdit />
+                <Link to={`/product/edit/${product._id}`}>
+                  <MdModeEdit />
+                </Link>
               </td>
               <td>
                 <MdDelete onClick={() => deleteProduct(product._id)} />

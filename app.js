@@ -11,8 +11,10 @@ const userRouter = require("./Routes/userRoutes");
 const reviewRouter = require("./Routes/reviewRoutes");
 const orderRouter = require("./Routes/orderRoutes");
 
+app.use(express.static("images"));
 app.use(cors());
 app.use(bodyParser());
+
 app.use("/api/product", productRouter);
 app.use("/api/user", userRouter);
 app.use("/api/review", reviewRouter);

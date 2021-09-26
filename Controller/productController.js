@@ -16,6 +16,8 @@ exports.products = async (req, res) => {
 
 exports.createProduct = async (req, res) => {
   try {
+    req.body.image = req.file.filename;
+
     await Product.create(req.body);
     res.status(201).json({
       message: "created product",
