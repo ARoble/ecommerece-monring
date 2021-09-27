@@ -1,6 +1,9 @@
 import axios from "axios";
 import { useState } from "react";
 import AdminNav from "./AdminNav";
+import { addProduct } from "../../Services/API";
+import { toast } from "react-toastify";
+import { useHistory } from "react-router-dom";
 function ProductAdd() {
   const [product, setProduct] = useState({
     name: "",
@@ -10,7 +13,7 @@ function ProductAdd() {
     description: "",
     image: "",
   });
-
+  let history = useHistory();
   function save(e) {
     e.preventDefault();
 
@@ -22,9 +25,9 @@ function ProductAdd() {
     formData.append("description", product.description);
     formData.append("image", product.image);
 
-    axios
-      .post("http://localhost:8000/api/product/", formData)
-      .then((res) => console.log(res));
+    addProduct(formData).then((res) => console.log(res));
+    toast.success("Product added");
+    history.push("/product/list");
   }
 
   return (

@@ -11,7 +11,7 @@ function ProductCard({ product }) {
   return (
     <div className="product-card">
       <div className="product-image">
-        <img src="./iphone.png" alt="product" />
+        <img src={`http://localhost:8000/${product.image}`} alt="product" />
       </div>
       <div className="product-details flex">
         <div>

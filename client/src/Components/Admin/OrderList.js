@@ -1,16 +1,16 @@
 import AdminNav from "./AdminNav";
 import { useEffect, useState } from "react";
 import axios from "axios";
-
 import { MdDone, MdVisibility } from "react-icons/md";
+
+import { fetchOrders } from "../../Services/API";
+
 function OrderList() {
   const [orders, setOrders] = useState([]);
   const [selected, setSelected] = useState();
   const [info, setInfo] = useState(false);
   useEffect(() => {
-    axios
-      .get("http://localhost:8000/api/order")
-      .then((res) => setOrders(res.data.orders));
+    fetchOrders().then((res) => setOrders(res.data.orders));
   }, []);
   return (
     <div className="container flex" style={{ position: "realtive" }}>

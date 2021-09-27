@@ -49,13 +49,17 @@ exports.getProduct = async (req, res) => {
 };
 exports.editProduct = async (req, res) => {
   try {
+    if (req.file !== undefined) {
+      req.body.image = req.file.filename;
+    }
+
     await Product.findByIdAndUpdate(req.params.id, req.body);
     res.status(200).json({
       message: "edited product",
     });
   } catch (e) {
-    res.status(400).josn({
-      messgae: e,
+    res.status(400).json({
+      messgae: e.message,
     });
   }
 };

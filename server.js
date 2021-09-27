@@ -1,4 +1,7 @@
 const mongoose = require("mongoose");
 const DB = process.env.DB.replace("<PASSWORD>", process.env.DB_PASSWORD);
 
-mongoose.connect(DB).then(() => console.log("Connected to DB ✅"));
+mongoose
+  .connect(DB)
+  .then(() => console.log("Connected to DB ✅"))
+  .catch((err) => console.log(e));

@@ -8,21 +8,19 @@ import {
 import AdminNav from "./AdminNav";
 import { MdModeEdit, MdDelete } from "react-icons/md";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { toast } from "react-toastify";
+import { deleteAProduct, fetchProducts } from "../../Services/API";
 
 function ProductList() {
   const [products, setProducts] = useState([]);
   const history = useHistory();
   useEffect(() => {
-    axios
-      .get("http://localhost:8000/api/product/")
-      .then((res) => setProducts(res.data.products));
-  });
+    fetchProducts().then((res) => setProducts(res.data.products));
+  }, [products]);
   function deleteProduct(id) {
     //code
 
-    axios.delete(`http://localhost:8000/api/product/${id}`).then((res) => {
+    deleteAProduct(id).then((res) => {
       toast.success("Product Deleted");
       history.push("/product/list");
     });

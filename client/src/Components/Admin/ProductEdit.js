@@ -6,17 +6,24 @@ import { toast } from "react-toastify";
 function ProductEdit() {
   const { id } = useParams();
   const history = useHistory();
-  const [product, setProduct] = useState([]);
+  const [product, setProduct] = useState({});
   useEffect(() => {
-    axios
-      .get(`http://localhost:8000/api/product/${id}`)
-      .then((res) => setProduct(res.data.data));
+    axios.get(`http://localhost:8000/api/product/${id}`).then((res) => {
+      setProduct(res.data.data);
+    });
   }, []);
 
   function editProduct(e) {
     e.preventDefault();
+    const formData = new FormData();
+    formData.append("name", product.name);
+    formData.append("price", product.price);
+    formData.append("category", product.category);
+    formData.append("quantity", product.quantity);
+    formData.append("description", product.description);
+    formData.append("image", product.image);
     axios
-      .put(`http://localhost:8000/api/product/${id}`, product)
+      .put(`http://localhost:8000/api/product/${id}`, formData)
       .then((res) => {
         toast.success("Edited Product");
         history.push("/product/list");
@@ -30,6 +37,7 @@ function ProductEdit() {
       <div className="admin-section">
         <form className="product-form" enctype="multipart/form-data">
           <h2 className="admin-heading">Edit Product</h2>
+
           <input
             type="text"
             className="input"
@@ -73,7 +81,13 @@ function ProductEdit() {
               setProduct({ ...product, description: e.target.value })
             }
           ></textarea>
-          <input type="file" name="image" />
+          <input
+            type="file"
+            name="image"
+            onChange={(e) => {
+              setProduct({ ...product, image: e.target.files[0] });
+            }}
+          />
           <button className="btn-review hover" onClick={(e) => editProduct(e)}>
             Edit Product
           </button>

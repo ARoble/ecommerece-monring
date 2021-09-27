@@ -7,15 +7,18 @@ import {
   Route,
   Link,
   useParams,
+  useHistory,
 } from "react-router-dom";
 import Review from "./Review";
 import ReviewForm from "./ReviewForm";
+import { toast } from "react-toastify";
 
 function Product() {
   const { id } = useParams();
   const [product, setProduct] = useState([]);
   const [review, setReview] = useState([]);
   const [qty, setQty] = useState(0);
+  let history = useHistory();
   useEffect(() => {
     //code
     axios
@@ -40,6 +43,8 @@ function Product() {
       let items = [...prevItem, product];
       localStorage.setItem("cart", JSON.stringify(items));
     }
+    toast.success("Item added to cart");
+    history.push("/checkout");
   }
 
   return (
